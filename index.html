@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winvest Danışmanlık - Müşteri Yönetim Sistemi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #1a252f;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .reminder-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .reminder-medium {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+        
+        .reminder-low {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Winvest Danışmanlık - Müşteri Yönetim Sistemi</h1>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('customers')">Müşteriler</div>
+            <div class="tab" onclick="openTab('visits')">Ziyaretler</div>
+            <div class="tab" onclick="openTab('reminders')">Hatırlatıcılar</div>
+            <div class="tab" onclick="openTab('reports')">Raporlar</div>
+        </div>
+        
+        <!-- Müşteriler Sekmesi -->
+        <div id="customers" class="tab-content active">
+            <h2>Müşteri Yönetimi</h2>
+            
+            <div class="search-box">
+                <input type="text" id="customerSearch" placeholder="Müşteri ara..." onkeyup="searchCustomers()">
+            </div>
+            
+            <button onclick="showAddCustomerForm()">Yeni Müşteri Ekle</button>
+            
+            <div id="addCustomerForm" style="display: none; margin-top: 20px;">
+                <h3>Yeni Müşteri Ekle</h3>
+                <div class="form-group">
+                    <label for="customerName">Müşteri Adı:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Telefon:</label>
+                    <input type="text" id="customerPhone">
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">E-posta:</label>
+                    <input type="email" id="customerEmail">
+                </div>
+                <div class="form-group">
+                    <label for="customerCompany">Şirket:</label>
+                    <input type="text" id="customerCompany">
+                </div>
+                <div class="form-group">
+                    <label for="customerNotes">Notlar:</label>
+                    <textarea id="customerNotes" rows="3"></textarea>
+                </div>
+                <button onclick="addCustomer()">Kaydet</button>
+                <button onclick="hideAddCustomerForm()" style="background-color: #6c757d;">İptal</button>
+            </div>
+            
+            <table id="customersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Adı</th>
+                        <th>Şirket</th>
+                        <th>Telefon</th>
+                        <th>E-posta</th>
+                        <th>Kayıt Tarihi</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <!-- Müşteri verileri buraya eklenecek -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Ziyaretler Sekmesi -->
+        <div id="visits" class="tab-content">
+            <h2>Ziyaret Yönetimi</h2>
+            
+            <button onclick="showAddVisitForm()">Yeni Ziyaret Ekle</button>
+            
+            <div id="addVisitForm" style="display: none; margin-top: 20px;">
+                <h3>Yeni Ziyaret Ekle</h3>
+                <div class="form-group">
+                    <label for="visitCustomer">Müşteri:</label>
+                    <select id="visitCustomer" required>
+                        <option value="">Seçiniz...</option>
+                        <!-- Müşteriler buraya eklenecek -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="visitDate">Tarih:</label>
+                    <input type="date" id="visitDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="visitType">Görüşme Türü:</label>
+                    <select id="visitType" required>
+                        <option value="yuz_yuze">Yüz Yüze</option>
+                        <option value="telefon">Telefon</option>
+                        <option value="video_konferans">Video Konferans</option>
+                        <option value="email">E-posta</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="visitNotes">Görüşme Notları:</label>
+                    <textarea id="visitNotes" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="visitNextAction">Sonraki Adım:</label>
+                    <input type="text" id="visitNextAction">
+                </div>
+                <div class="form-group">
+                    <label for="visitNextDate">Sonraki Görüşme Tarihi:</label>
+                    <input type="date" id="visitNextDate">
+                </div>
+                <button onclick="addVisit()">Kaydet</button>
+                <button onclick="hideAddVisitForm()" style="background-color: #6c757d;">İptal</button>
+            </div>
+            
+            <table id="visitsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Müşteri</th>
+                        <th>Tarih</th>
+                        <th>Tür</th>
+                        <th>Sonraki Adım</th>
+                        <th>Sonraki Tarih</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="visitsTableBody">
+                    <!-- Ziyaret verileri buraya eklenecek -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Hatırlatıcılar Sekmesi -->
+        <div id="reminders" class="tab-content">
+            <h2>Hatırlatıcılar</h2>
+            
+            <div class="alert alert-warning">
+                <strong>Yaklaşan Hatırlatıcılar:</strong> Önümüzdeki 7 gün içinde yapılması gereken işlemler.
+            </div>
+            
+            <button onclick="showAddReminderForm()">Yeni Hatırlatıcı Ekle</button>
+            
+            <div id="addReminderForm" style="display: none; margin-top: 20px;">
+                <h3>Yeni Hatırlatıcı Ekle</h3>
+                <div class="form-group">
+                    <label for="reminderTitle">Başlık:</label>
+                    <input type="text" id="reminderTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="reminderCustomer">Müşteri (Opsiyonel):</label>
+                    <select id="reminderCustomer">
+                        <option value="">Seçiniz...</option>
+                        <!-- Müşteriler buraya eklenecek -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reminderDate">Tarih:</label>
+                    <input type="date" id="reminderDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="reminderPriority">Öncelik:</label>
+                    <select id="reminderPriority" required>
+                        <option value="high">Yüksek</option>
+                        <option value="medium" selected>Orta</option>
+                        <option value="low">Düşük</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reminderNotes">Notlar:</label>
+                    <textarea id="reminderNotes" rows="3"></textarea>
+                </div>
+                <button onclick="addReminder()">Kaydet</button>
+                <button onclick="hideAddReminderForm()" style="background-color: #6c757d;">İptal</button>
+            </div>
+            
+            <table id="remindersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Başlık</th>
+                        <th>Müşteri</th>
+                        <th>Tarih</th>
+                        <th>Öncelik</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="remindersTableBody">
+                    <!-- Hatırlatıcı verileri buraya eklenecek -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Raporlar Sekmesi -->
+        <div id="reports" class="tab-content">
+            <h2>Raporlar ve Analizler</h2>
+            
+            <div class="alert alert-info">
+                <strong>İstatistikler:</strong> Müşteri ve ziyaret verilerinizin özeti.
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                <div style="width: 30%; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>Toplam Müşteri</h3>
+                    <p style="font-size: 24px; font-weight: bold; text-align: center;" id="totalCustomers">0</p>
+                </div>
+                <div style="width: 30%; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>Bu Ayki Ziyaretler</h3>
+                    <p style="font-size: 24px; font-weight: bold; text-align: center;" id="monthlyVisits">0</p>
+                </div>
+                <div style="width: 30%; background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>Bekleyen Hatırlatıcılar</h3>
+                    <p style="font-size: 24px; font-weight: bold; text-align: center;" id="pendingReminders">0</p>
+                </div>
+            </div>
+            
+            <h3>Son Ziyaretler</h3>
+            <table id="recentVisitsTable">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>Müşteri</th>
+                        <th>Görüşme Türü</th>
+                        <th>Notlar</th>
+                    </tr>
+                </thead>
+                <tbody id="recentVisitsTableBody">
+                    <!-- Son ziyaretler buraya eklenecek -->
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 30px;">Müşteri Dağılımı</h3>
+            <div style="background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <canvas id="customerChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Veri depolama için temel array'ler
+        let customers = [];
+        let visits = [];
+        let reminders = [];
+        
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        window.onload = function() {
+            // Örnek veriler (gerçek uygulamada bu veriler local storage veya veritabanından gelecek)
+            customers = [
+                {id: 1, name: "Ahmet Yılmaz", phone: "05551234567", email: "ahmet@example.com", company: "Yılmaz Ltd.", notes: "Yatırım danışmanlığı almak istiyor.", createdAt: "2023-05-15"},
+                {id: 2, name: "Ayşe Demir", phone: "05321234567", email: "ayse@example.com", company: "Demir Holding", notes: "Emlak yatırımları hakkında bilgi alacak.", createdAt: "2023-06-20"},
+                {id: 3, name: "Mehmet Kaya", phone: "05431234567", email: "mehmet@example.com", company: "Kaya İnşaat", notes: "Portföy yönetimi için görüşülecek.", createdAt: "2023-07-10"}
+            ];
+            
+            visits = [
+                {id: 1, customerId: 1, date: "2023-08-01", type: "yuz_yuze", notes: "Yatırım stratejileri konuşuldu. Risk profili çıkarıldı.", nextAction: "Portföy önerisi hazırlanacak", nextDate: "2023-08-15"},
+                {id: 2, customerId: 2, date: "2023-08-05", type: "telefon", notes: "Emlak yatırımları hakkında temel bilgiler verildi. Detaylı görüşme için randevu alındı.", nextAction: "Yüz yüze görüşme planlanacak", nextDate: "2023-08-20"},
+                {id: 3, customerId: 3, date: "2023-08-10", type: "video_konferans", notes: "Mevcut portföy değerlendirildi. Yeni stratejiler tartışıldı.", nextAction: "Yeni yatırım önerileri gönderilecek", nextDate: "2023-09-01"}
+            ];
+            
+            reminders = [
+                {id: 1, title: "Ahmet Yılmaz portföy gönderimi", customerId: 1, date: "2023-08-15", priority: "high", notes: "Hazırlanan portföy önerisini gönder", completed: false},
+                {id: 2, title: "Ayşe Demir yüz yüze görüşme", customerId: 2, date: "2023-08-20", priority: "medium", notes: "Emlak yatırımları detaylı görüşülecek", completed: false},
+                {id: 3, title: "Aylık rapor hazırlığı", customerId: null, date: "2023-08-31", priority: "medium", notes: "Aylık müşteri raporlarını hazırla", completed: false}
+            ];
+            
+            // Sayfaları güncelle
+            updateCustomersTable();
+            updateVisitsTable();
+            updateRemindersTable();
+            updateReports();
+            
+            // Müşteri dropdown'larını doldur
+            populateCustomerDropdowns();
+        };
+        
+        // Tab geçiş fonksiyonu
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Raporlar sekmesine geçildiğinde grafikleri güncelle
+            if (tabName === 'reports') {
+                updateReports();
+            }
+        }
+        
+        // Müşteri tablosunu güncelle
+        function updateCustomersTable() {
+            const tableBody = document.getElementById('customersTableBody');
+            tableBody.innerHTML = '';
+            
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.company || '-'}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || '-'}</td>
+                    <td>${customer.createdAt}</td>
+                    <td>
+                        <button onclick="viewCustomer(${customer.id})">Görüntüle</button>
+                        <button onclick="editCustomer(${customer.id})" style="background-color: #17a2b8;">Düzenle</button>
+                        <button onclick="deleteCustomer(${customer.id})" style="background-color: #dc3545;">Sil</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Ziyaret tablosunu güncelle
+        function updateVisitsTable() {
+            const tableBody = document.getElementById('visitsTableBody');
+            tableBody.innerHTML = '';
+            
+            visits.forEach(visit => {
+                const customer = customers.find(c => c.id === visit.customerId);
+                const customerName = customer ? customer.name : 'Bilinmeyen Müşteri';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${visit.id}</td>
+                    <td>${customerName}</td>
+                    <td>${visit.date}</td>
+                    <td>${getVisitTypeName(visit.type)}</td>
+                    <td>${visit.nextAction || '-'}</td>
+                    <td>${visit.nextDate || '-'}</td>
+                    <td>
+                        <button onclick="viewVisit(${visit.id})">Görüntüle</button>
+                        <button onclick="editVisit(${visit.id})" style="background-color: #17a2b8;">Düzenle</button>
+                        <button onclick="deleteVisit(${visit.id})" style="background-color: #dc3545;">Sil</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Hatırlatıcı tablosunu güncelle
+        function updateRemindersTable() {
+            const tableBody = document.getElementById('remindersTableBody');
+            tableBody.innerHTML = '';
+            
+            // Hatırlatıcıları tarihe göre sırala (yaklaşanlar önce)
+            const sortedReminders = [...reminders].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            sortedReminders.forEach(reminder => {
+                const customer = reminder.customerId ? customers.find(c => c.id === reminder.customerId) : null;
+                const customerName = customer ? customer.name : '-';
+                
+                const priorityClass = `reminder-${reminder.priority}`;
+                const status = reminder.completed ? 'Tamamlandı' : 'Bekliyor';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reminder.id}</td>
+                    <td>${reminder.title}</td>
+                    <td>${customerName}</td>
+                    <td><span class="${priorityClass}">${reminder.date}</span></td>
+                    <td><span class="${priorityClass}">${getPriorityName(reminder.priority)}</span></td>
+                    <td>${status}</td>
+                    <td>
+                        <button onclick="completeReminder(${reminder.id})" style="background-color: #28a745;">Tamamlandı</button>
+                        <button onclick="editReminder(${reminder.id})" style="background-color: #17a2b8;">Düzenle</button>
+                        <button onclick="deleteReminder(${reminder.id})" style="background-color: #dc3545;">Sil</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Raporları güncelle
+        function updateReports() {
+            // İstatistikleri güncelle
+            document.getElementById('totalCustomers').textContent = customers.length;
+            
+            const currentMonth = new Date().getMonth() + 1;
+            const currentYear = new Date().getFullYear();
+            const monthlyVisits = visits.filter(visit => {
+                const visitDate = new Date(visit.date);
+                return visitDate.getMonth() + 1 === currentMonth && visitDate.getFullYear() === currentYear;
+            }).length;
+            document.getElementById('monthlyVisits').textContent = monthlyVisits;
+            
+            const pendingReminders = reminders.filter(r => !r.completed).length;
+            document.getElementById('pendingReminders').textContent = pendingReminders;
+            
+            // Son ziyaretler tablosunu güncelle (en son 5 ziyaret)
+            const recentVisits = [...visits].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+            const recentVisitsBody = document.getElementById('recentVisitsTableBody');
+            recentVisitsBody.innerHTML = '';
+            
+            recentVisits.forEach(visit => {
+                const customer = customers.find(c => c.id === visit.customerId);
+                const customerName = customer ? customer.name : 'Bilinmeyen Müşteri';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${visit.date}</td>
+                    <td>${customerName}</td>
+                    <td>${getVisitTypeName(visit.type)}</td>
+                    <td>${visit.notes.substring(0, 50)}${visit.notes.length > 50 ? '...' : ''}</td>
+                `;
+                recentVisitsBody.appendChild(row);
+            });
+            
+            // Grafik oluştur (basit bir örnek)
+            updateCustomerChart();
+        }
+        
+        // Müşteri grafiğini güncelle
+        function updateCustomerChart() {
+            const ctx = document.getElementById('customerChart').getContext('2d');
+            
+            // Basit bir grafik örneği (gerçek uygulamada daha detaylı veriler kullanılmalı)
+            const customerLabels = customers.map(c => c.name);
+            const visitCounts = customers.map(c => 
+                visits.filter(v => v.customerId === c.id).length
+            );
+            
+            // Eğer önceki bir grafik varsa temizle
+            if (window.customerChart) {
+                window.customerChart.destroy();
+            }
+            
+            window.customerChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: customerLabels,
+                    datasets: [{
+                        label: 'Ziyaret Sayısı',
+                        data: visitCounts,
+                        backgroundColor: 'rgba(44, 62, 80, 0.7)',
+                        borderColor: 'rgba(44, 62, 80, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Müşteri dropdown'larını doldur
+        function populateCustomerDropdowns() {
+            const visitCustomerDropdown = document.getElementById('visitCustomer');
+            const reminderCustomerDropdown = document.getElementById('reminderCustomer');
+            
+            // Önce mevcut seçenekleri temizle (ilk boş seçeneği koru)
+            while (visitCustomerDropdown.options.length > 1) {
+                visitCustomerDropdown.remove(1);
+            }
+            
+            while (reminderCustomerDropdown.options.length > 1) {
+                reminderCustomerDropdown.remove(1);
+            }
+            
+            // Müşterileri dropdown'lara ekle
+            customers.forEach(customer => {
+                const option1 = document.createElement('option');
+                option1.value = customer.id;
+                option1.textContent = `${customer.name} (${customer.company || 'Şirket yok'})`;
+                visitCustomerDropdown.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = customer.id;
+                option2.textContent = `${customer.name} (${customer.company || 'Şirket yok'})`;
+                reminderCustomerDropdown.appendChild(option2);
+            });
+        }
+        
+        // Müşteri ekleme formunu göster
+        function showAddCustomerForm() {
+            document.getElementById('addCustomerForm').style.display = 'block';
+        }
+        
+        // Müşteri ekleme formunu gizle
+        function hideAddCustomerForm() {
+            document.getElementById('addCustomerForm').style.display = 'none';
+            // Formu temizle
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('customerCompany').value = '';
+            document.getElementById('customerNotes').value = '';
+        }
+        
+        // Yeni müşteri ekle
+        function addCustomer() {
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const email = document.getElementById('customerEmail').value;
+            const company = document.getElementById('customerCompany').value;
+            const notes = document.getElementById('customerNotes').value;
+            
+            if (!name) {
+                alert('Müşteri adı zorunludur!');
+                return;
+            }
+            
+            const newId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
+            const today = new Date().toISOString().split('T')[0];
+            
+            const newCustomer = {
+                id: newId,
+                name: name,
+                phone: phone,
+                email: email,
+                company: company,
+                notes: notes,
+                createdAt: today
+            };
+            
+            customers.push(newCustomer);
+            updateCustomersTable();
+            populateCustomerDropdowns();
+            hideAddCustomerForm();
+            
+            alert('Müşteri başarıyla eklendi!');
+        }
+        
+        // Müşteri görüntüle
+        function viewCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            alert(`
+                Müşteri Detayları:
+                ID: ${customer.id}
+                Adı: ${customer.name}
+                Şirket: ${customer.company || '-'}
+                Telefon: ${customer.phone}
+                E-posta: ${customer.email || '-'}
+                Kayıt Tarihi: ${customer.createdAt}
+                Notlar: ${customer.notes || '-'}
+            `);
+        }
+        
+        // Müşteri düzenle (basit bir örnek)
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+            
+            const newName = prompt("Müşteri Adı:", customer.name);
+            if (newName === null) return;
+            
+            const newPhone = prompt("Telefon:", customer.phone);
+            const newEmail = prompt("E-posta:", customer.email);
+            const newCompany = prompt("Şirket:", customer.company);
+            const newNotes = prompt("Notlar:", customer.notes);
+            
+            customer.name = newName || customer.name;
+            customer.phone = newPhone || customer.phone;
+            customer.email = newEmail || customer.email;
+            customer.company = newCompany || customer.company;
+            customer.notes = newNotes || customer.notes;
+            
+            updateCustomersTable();
+            populateCustomerDropdowns();
+            alert('Müşteri bilgileri güncellendi!');
+        }
+        
+        // Müşteri sil
+        function deleteCustomer(id) {
+            if (!confirm('Bu müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                return;
+            }
+            
+            const index = customers.findIndex(c => c.id === id);
+            if (index !== -1) {
+                customers.splice(index, 1);
+                
+                // Bu müşteriye ait ziyaretleri de sil
+                visits = visits.filter(v => v.customerId !== id);
+                
+                // Bu müşteriye ait hatırlatıcıları da sil
+                reminders = reminders.filter(r => r.customerId !== id);
+                
+                updateCustomersTable();
+                updateVisitsTable();
+                updateRemindersTable();
+                populateCustomerDropdowns();
+                alert('Müşteri ve ilişkili veriler silindi!');
+            }
+        }
+        
+        // Ziyaret ekleme formunu göster
+        function showAddVisitForm() {
+            document.getElementById('addVisitForm').style.display = 'block';
+            // Bugünün tarihini varsayılan olarak ayarla
+            document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+        }
+        
+        // Ziyaret ekleme formunu gizle
+        function hideAddVisitForm() {
+            document.getElementById('addVisitForm').style.display = 'none';
+            // Formu temizle
+            document.getElementById('visitCustomer').value = '';
+            document.getElementById('visitDate').value = '';
+            document.getElementById('visitType').value = 'yuz_yuze';
+            document.getElementById('visitNotes').value = '';
+            document.getElementById('visitNextAction').value = '';
+            document.getElementById('visitNextDate').value = '';
+        }
+        
+        // Yeni ziyaret ekle
+        function addVisit() {
+            const customerId = parseInt(document.getElementById('visitCustomer').value);
+            const date = document.getElementById('visitDate').value;
+            const type = document.getElementById('visitType').value;
+            const notes = document.getElementById('visitNotes').value;
+            const nextAction = document.getElementById('visitNextAction').value;
+            const nextDate = document.getElementById('visitNextDate').value;
+            
+            if (!customerId || !date || !notes) {
+                alert('Müşteri, tarih ve notlar zorunludur!');
+                return;
+            }
+            
+            const newId = visits.length > 0 ? Math.max(...visits.map(v => v.id)) + 1 : 1;
+            
+            const newVisit = {
+                id: newId,
+                customerId: customerId,
+                date: date,
+                type: type,
+                notes: notes,
+                nextAction: nextAction,
+                nextDate: nextDate
+            };
+            
+            visits.push(newVisit);
+            updateVisitsTable();
+            hideAddVisitForm();
+            
+            // Eğer bir sonraki görüşme tarihi belirtilmişse hatırlatıcı oluştur
+            if (nextDate && nextAction) {
+                const customer = customers.find(c => c.id === customerId);
+                const customerName = customer ? customer.name : 'Müşteri';
+                
+                const newReminderId = reminders.length > 0 ? Math.max(...reminders.map(r => r.id)) + 1 : 1;
+                
+                const newReminder = {
+                    id: newReminderId,
+                    title: `${customerName} - ${nextAction}`,
+                    customerId: customerId,
+                    date: nextDate,
+                    priority: "medium",
+                    notes: `Ziyaret ID: ${newId}\n${notes.substring(0, 100)}`,
+                    completed: false
+                };
+                
+                reminders.push(newReminder);
+                updateRemindersTable();
+            }
+            
+            alert('Ziyaret başarıyla eklendi!');
+        }
+        
+        // Ziyaret görüntüle
+        function viewVisit(id) {
+            const visit = visits.find(v => v.id === id);
+            if (!visit) return;
+            
+            const customer = customers.find(c => c.id === visit.customerId);
+            const customerName = customer ? customer.name : 'Bilinmeyen Müşteri';
+            
+            alert(`
+                Ziyaret Detayları:
+                ID: ${visit.id}
+                Müşteri: ${customerName}
+                Tarih: ${visit.date}
+                Görüşme Türü: ${getVisitTypeName(visit.type)}
+                Notlar: ${visit.notes}
+                Sonraki Adım: ${visit.nextAction || '-'}
+                Sonraki Görüşme Tarihi: ${visit.nextDate || '-'}
+            `);
+        }
+        
+        // Ziyaret düzenle (basit bir örnek)
+        function editVisit(id) {
+            const visit = visits.find(v => v.id === id);
+            if (!visit) return;
+            
+            const customer = customers.find(c => c.id === visit.customerId);
+            const customerName = customer ? customer.name : 'Bilinmeyen Müşteri';
+            
+            const newNotes = prompt("Görüşme Notları:", visit.notes);
+            if (newNotes === null) return;
+            
+            const newNextAction = prompt("Sonraki Adım:", visit.nextAction);
+            const newNextDate = prompt("Sonraki Görüşme Tarihi (YYYY-AA-GG):", visit.nextDate);
+            
+            visit.notes = newNotes || visit.notes;
+            visit.nextAction = newNextAction || visit.nextAction;
+            visit.nextDate = newNextDate || visit.nextDate;
+            
+            updateVisitsTable();
+            alert('Ziyaret bilgileri güncellendi!');
+        }
+        
+        // Ziyaret sil
+        function deleteVisit(id) {
+            if (!confirm('Bu ziyaret kaydını silmek istediğinize emin misiniz?')) {
+                return;
+            }
+            
+            const index = visits.findIndex(v => v.id === id);
+            if (index !== -1) {
+                visits.splice(index, 1);
+                updateVisitsTable();
+                alert('Ziyaret kaydı silindi!');
+            }
+        }
+        
+        // Hatırlatıcı ekleme formunu göster
+        function showAddReminderForm() {
+            document.getElementById('addReminderForm').style.display = 'block';
+            // Bugünün tarihini varsayılan olarak ayarla
+            document.getElementById('reminderDate').value = new Date().toISOString().split('T')[0];
+        }
+        
+        // Hatırlatıcı ekleme formunu gizle
+        function hideAddReminderForm() {
+            document.getElementById('addReminderForm').style.display = 'none';
+            // Formu temizle
+            document.getElementById('reminderTitle').value = '';
+            document.getElementById('reminderCustomer').value = '';
+            document.getElementById('reminderDate').value = '';
+            document.getElementById('reminderPriority').value = 'medium';
+            document.getElementById('reminderNotes').value = '';
+        }
+        
+        // Yeni hatırlatıcı ekle
+        function addReminder() {
+            const title = document.getElementById('reminderTitle').value;
+            const customerId = document.getElementById('reminderCustomer').value ? 
+                parseInt(document.getElementById('reminderCustomer').value) : null;
+            const date = document.getElementById('reminderDate').value;
+            const priority = document.getElementById('reminderPriority').value;
+            const notes = document.getElementById('reminderNotes').value;
+            
+            if (!title || !date) {
+                alert('Başlık ve tarih zorunludur!');
+                return;
+            }
+            
+            const newId = reminders.length > 0 ? Math.max(...reminders.map(r => r.id)) + 1 : 1;
+            
+            const newReminder = {
+                id: newId,
+                title: title,
+                customerId: customerId,
+                date: date,
+                priority: priority,
+                notes: notes,
+                completed: false
+            };
+            
+            reminders.push(newReminder);
+            updateRemindersTable();
+            hideAddReminderForm();
+            
+            alert('Hatırlatıcı başarıyla eklendi!');
+        }
+        
+        // Hatırlatıcıyı tamamlandı olarak işaretle
+        function completeReminder(id) {
+            const reminder = reminders.find(r => r.id === id);
+            if (reminder) {
+                reminder.completed = true;
+                updateRemindersTable();
+                alert('Hatırlatıcı tamamlandı olarak işaretlendi!');
+            }
+        }
+        
+        // Hatırlatıcı düzenle (basit bir örnek)
+        function editReminder(id) {
+            const reminder = reminders.find(r => r.id === id);
+            if (!reminder) return;
+            
+            const newTitle = prompt("Başlık:", reminder.title);
+            if (newTitle === null) return;
+            
+            const newDate = prompt("Tarih (YYYY-AA-GG):", reminder.date);
+            const newPriority = prompt("Öncelik (high/medium/low):", reminder.priority);
+            const newNotes = prompt("Notlar:", reminder.notes);
+            
+            reminder.title = newTitle || reminder.title;
+            reminder.date = newDate || reminder.date;
+            reminder.priority = newPriority || reminder.priority;
+            reminder.notes = newNotes || reminder.notes;
+            
+            updateRemindersTable();
+            alert('Hatırlatıcı bilgileri güncellendi!');
+        }
+        
+        // Hatırlatıcı sil
+        function deleteReminder(id) {
+            if (!confirm('Bu hatırlatıcıyı silmek istediğinize emin misiniz?')) {
+                return;
+            }
+            
+            const index = reminders.findIndex(r => r.id === id);
+            if (index !== -1) {
+                reminders.splice(index, 1);
+                updateRemindersTable();
+                alert('Hatırlatıcı silindi!');
+            }
+        }
+        
+        // Müşteri ara
+        function searchCustomers() {
+            const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm) || 
+                (customer.company && customer.company.toLowerCase().includes(searchTerm)) ||
+                customer.phone.includes(searchTerm) ||
+                (customer.email && customer.email.toLowerCase().includes(searchTerm))
+            );
+            
+            const tableBody = document.getElementById('customersTableBody');
+            tableBody.innerHTML = '';
+            
+            filteredCustomers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.company || '-'}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || '-'}</td>
+                    <td>${customer.createdAt}</td>
+                    <td>
+                        <button onclick="viewCustomer(${customer.id})">Görüntüle</button>
+                        <button onclick="editCustomer(${customer.id})" style="background-color: #17a2b8;">Düzenle</button>
+                        <button onclick="deleteCustomer(${customer.id})" style="background-color: #dc3545;">Sil</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Yardımcı fonksiyonlar
+        function getVisitTypeName(type) {
+            const types = {
+                'yuz_yuze': 'Yüz Yüze',
+                'telefon': 'Telefon',
+                'video_konferans': 'Video Konferans',
+                'email': 'E-posta'
+            };
+            return types[type] || type;
+        }
+        
+        function getPriorityName(priority) {
+            const priorities = {
+                'high': 'Yüksek',
+                'medium': 'Orta',
+                'low': 'Düşük'
+            };
+            return priorities[priority] || priority;
+        }
+    </script>
+    
+    <!-- Chart.js kütüphanesi (grafikler için) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
