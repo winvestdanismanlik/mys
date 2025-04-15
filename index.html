@@ -426,31 +426,74 @@
     </div>
 
     <script>
+        // Veri depolama için localStorage anahtarları
+        const STORAGE_KEYS = {
+            CUSTOMERS: 'winvest_customers',
+            VISITS: 'winvest_visits',
+            REMINDERS: 'winvest_reminders'
+        };
+        
+        // Veri yükleme fonksiyonları
+        function loadCustomers() {
+            const data = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function loadVisits() {
+            const data = localStorage.getItem(STORAGE_KEYS.VISITS);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function loadReminders() {
+            const data = localStorage.getItem(STORAGE_KEYS.REMINDERS);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        // Veri kaydetme fonksiyonları
+        function saveCustomers(data) {
+            localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(data));
+        }
+        
+        function saveVisits(data) {
+            localStorage.setItem(STORAGE_KEYS.VISITS, JSON.stringify(data));
+        }
+        
+        function saveReminders(data) {
+            localStorage.setItem(STORAGE_KEYS.REMINDERS, JSON.stringify(data));
+        }
+        
         // Veri depolama için temel array'ler
-        let customers = [];
-        let visits = [];
-        let reminders = [];
+        let customers = loadCustomers();
+        let visits = loadVisits();
+        let reminders = loadReminders();
         
         // Sayfa yüklendiğinde çalışacak fonksiyon
         window.onload = function() {
-            // Örnek veriler (gerçek uygulamada bu veriler local storage veya veritabanından gelecek)
-            customers = [
-                {id: 1, name: "Ahmet Yılmaz", phone: "05551234567", email: "ahmet@example.com", company: "Yılmaz Ltd.", notes: "Yatırım danışmanlığı almak istiyor.", createdAt: "2023-05-15"},
-                {id: 2, name: "Ayşe Demir", phone: "05321234567", email: "ayse@example.com", company: "Demir Holding", notes: "Emlak yatırımları hakkında bilgi alacak.", createdAt: "2023-06-20"},
-                {id: 3, name: "Mehmet Kaya", phone: "05431234567", email: "mehmet@example.com", company: "Kaya İnşaat", notes: "Portföy yönetimi için görüşülecek.", createdAt: "2023-07-10"}
-            ];
-            
-            visits = [
-                {id: 1, customerId: 1, date: "2023-08-01", type: "yuz_yuze", notes: "Yatırım stratejileri konuşuldu. Risk profili çıkarıldı.", nextAction: "Portföy önerisi hazırlanacak", nextDate: "2023-08-15"},
-                {id: 2, customerId: 2, date: "2023-08-05", type: "telefon", notes: "Emlak yatırımları hakkında temel bilgiler verildi. Detaylı görüşme için randevu alındı.", nextAction: "Yüz yüze görüşme planlanacak", nextDate: "2023-08-20"},
-                {id: 3, customerId: 3, date: "2023-08-10", type: "video_konferans", notes: "Mevcut portföy değerlendirildi. Yeni stratejiler tartışıldı.", nextAction: "Yeni yatırım önerileri gönderilecek", nextDate: "2023-09-01"}
-            ];
-            
-            reminders = [
-                {id: 1, title: "Ahmet Yılmaz portföy gönderimi", customerId: 1, date: "2023-08-15", priority: "high", notes: "Hazırlanan portföy önerisini gönder", completed: false},
-                {id: 2, title: "Ayşe Demir yüz yüze görüşme", customerId: 2, date: "2023-08-20", priority: "medium", notes: "Emlak yatırımları detaylı görüşülecek", completed: false},
-                {id: 3, title: "Aylık rapor hazırlığı", customerId: null, date: "2023-08-31", priority: "medium", notes: "Aylık müşteri raporlarını hazırla", completed: false}
-            ];
+            // Eğer localStorage boşsa örnek veriler ekle
+            if (customers.length === 0 && visits.length === 0 && reminders.length === 0) {
+                customers = [
+                    {id: 1, name: "Ahmet Yılmaz", phone: "05551234567", email: "ahmet@example.com", company: "Yılmaz Ltd.", notes: "Yatırım danışmanlığı almak istiyor.", createdAt: "2023-05-15"},
+                    {id: 2, name: "Ayşe Demir", phone: "05321234567", email: "ayse@example.com", company: "Demir Holding", notes: "Emlak yatırımları hakkında bilgi alacak.", createdAt: "2023-06-20"},
+                    {id: 3, name: "Mehmet Kaya", phone: "05431234567", email: "mehmet@example.com", company: "Kaya İnşaat", notes: "Portföy yönetimi için görüşülecek.", createdAt: "2023-07-10"}
+                ];
+                
+                visits = [
+                    {id: 1, customerId: 1, date: "2023-08-01", type: "yuz_yuze", notes: "Yatırım stratejileri konuşuldu. Risk profili çıkarıldı.", nextAction: "Portföy önerisi hazırlanacak", nextDate: "2023-08-15"},
+                    {id: 2, customerId: 2, date: "2023-08-05", type: "telefon", notes: "Emlak yatırımları hakkında temel bilgiler verildi. Detaylı görüşme için randevu alındı.", nextAction: "Yüz yüze görüşme planlanacak", nextDate: "2023-08-20"},
+                    {id: 3, customerId: 3, date: "2023-08-10", type: "video_konferans", notes: "Mevcut portföy değerlendirildi. Yeni stratejiler tartışıldı.", nextAction: "Yeni yatırım önerileri gönderilecek", nextDate: "2023-09-01"}
+                ];
+                
+                reminders = [
+                    {id: 1, title: "Ahmet Yılmaz portföy gönderimi", customerId: 1, date: "2023-08-15", priority: "high", notes: "Hazırlanan portföy önerisini gönder", completed: false},
+                    {id: 2, title: "Ayşe Demir yüz yüze görüşme", customerId: 2, date: "2023-08-20", priority: "medium", notes: "Emlak yatırımları detaylı görüşülecek", completed: false},
+                    {id: 3, title: "Aylık rapor hazırlığı", customerId: null, date: "2023-08-31", priority: "medium", notes: "Aylık müşteri raporlarını hazırla", completed: false}
+                ];
+                
+                // Örnek verileri kaydet
+                saveCustomers(customers);
+                saveVisits(visits);
+                saveReminders(reminders);
+            }
             
             // Sayfaları güncelle
             updateCustomersTable();
@@ -505,6 +548,9 @@
                 `;
                 tableBody.appendChild(row);
             });
+            
+            // Verileri kaydet
+            saveCustomers(customers);
         }
         
         // Ziyaret tablosunu güncelle
@@ -532,6 +578,9 @@
                 `;
                 tableBody.appendChild(row);
             });
+            
+            // Verileri kaydet
+            saveVisits(visits);
         }
         
         // Hatırlatıcı tablosunu güncelle
@@ -565,6 +614,9 @@
                 `;
                 tableBody.appendChild(row);
             });
+            
+            // Verileri kaydet
+            saveReminders(reminders);
         }
         
         // Raporları güncelle
@@ -714,6 +766,7 @@
             };
             
             customers.push(newCustomer);
+            saveCustomers(customers);
             updateCustomersTable();
             populateCustomerDropdowns();
             hideAddCustomerForm();
@@ -757,6 +810,7 @@
             customer.company = newCompany || customer.company;
             customer.notes = newNotes || customer.notes;
             
+            saveCustomers(customers);
             updateCustomersTable();
             populateCustomerDropdowns();
             alert('Müşteri bilgileri güncellendi!');
@@ -777,6 +831,10 @@
                 
                 // Bu müşteriye ait hatırlatıcıları da sil
                 reminders = reminders.filter(r => r.customerId !== id);
+                
+                saveCustomers(customers);
+                saveVisits(visits);
+                saveReminders(reminders);
                 
                 updateCustomersTable();
                 updateVisitsTable();
