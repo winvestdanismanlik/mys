@@ -26,10 +26,36 @@
             text-align: center;
             margin-bottom: 30px;
             border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+        
+        .header-text {
+            text-align: center;
         }
         
         h1 {
             margin: 0;
+            font-size: 24px;
+        }
+        
+        .company-slogan {
+            margin: 5px 0 0;
+            font-style: italic;
+            font-size: 14px;
         }
         
         .tabs {
@@ -161,7 +187,13 @@
 <body>
     <div class="container">
         <header>
-            <h1>Winvest Danışmanlık - Müşteri Yönetim Sistemi</h1>
+            <div class="logo-container">
+                <img src="logo.png" alt="Winvest Danışmanlık Logo" class="logo">
+                <div class="header-text">
+                    <h1>Winvest Danışmanlık</h1>
+                    <p class="company-slogan">Müşteri Yönetim Sistemi</p>
+                </div>
+            </div>
         </header>
         
         <div class="tabs">
