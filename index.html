@@ -2,8 +2,116 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Winvest Danışmanlık - Müşteri Yönetim Sistemi</title>
+    <style>
+        /* Mevcut stillerin üzerine eklemeler yapıldı */
+        
+        /* Responsive tablo stilleri */
+        @media screen and (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            /* Daha büyük dokunmatik hedefler */
+            button {
+                min-height: 44px;
+                min-width: 44px;
+                padding: 12px 20px;
+                font-size: 18px;
+            }
+            
+            /* Form elemanları için daha büyük boyutlar */
+            input, textarea, select {
+                font-size: 16px;
+                padding: 12px;
+            }
+            
+            /* Daha büyük yazı boyutları */
+            body {
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            h3 {
+                font-size: 20px;
+            }
+            
+            /* Tab stilleri */
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1 0 auto;
+                margin-bottom: 5px;
+                font-size: 16px;
+                padding: 12px 15px;
+            }
+            
+            /* Grafik container responsive */
+            #customerChart {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            /* İstatistik kartları */
+            #reports > div:first-of-type {
+                flex-direction: column;
+            }
+            
+            #reports > div:first-of-type > div {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Mobil cihazlar için ekstra küçük ekran stilleri */
+        @media screen and (max-width: 480px) {
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            /* Tab içeriği padding azaltma */
+            .tab-content {
+                padding: 15px 10px;
+            }
+            
+            /* Tablo hücre padding azaltma */
+            th, td {
+                padding: 8px;
+            }
+        }
+        
+        /* Mevcut stillere ek: Dokunmatik etkileşim */
+        button, .tab {
+            transition: all 0.3s ease;
+        }
+        
+        button:active, .tab:active {
+            transform: scale(0.98);
+        }
+        
+        /* Mevcut stillere ek: Daha iyi form deneyimi */
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #2c3e50;
+        }
+    </style>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
